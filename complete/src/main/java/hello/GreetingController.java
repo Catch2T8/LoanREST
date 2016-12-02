@@ -1,9 +1,13 @@
 package hello;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.atomic.AtomicLong;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,10 +36,9 @@ public class GreetingController {
             @RequestParam(value="annum") 			int annum,
             @RequestParam(value="assets") 		int assets,
             @RequestParam(value="liabilities") 	int liabilities
-            ) throws JSONException {
+            ) throws JSONException, IOException {
         
-        
-        JSONObject obj = new JSONObject("http://uhac.mybluemix.net/SimpleServlet?"
+        URL url = new URL(("http://uhac.mybluemix.net/SimpleServlet?"
                 + "age=" + age
                 + "&sex=" + sex
                 + "&civil=" + civil
@@ -46,8 +49,10 @@ public class GreetingController {
                 + "&employment="  +employment
                 + "&annum="       +annum
                 + "&assets="      +assets
-                + "&liabilities=" +liabilities
-                ); 
-        return new Record(obj.getDouble("appraisal"));
+                + "&liabilities=" +liabilities).replaceAll(" ", "%20"));
+        JSONTokener token = new JSONTokener(new InputStreamReader(url.openStream()));
+        JSONObject obj = new JSONObject(token);
+        double appraisal = obj.getDouble("appraisal");
+        return new Record(appraisal);
     }
 }
