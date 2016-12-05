@@ -32,7 +32,6 @@ public class GreetingController {
            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     //private static final MysqlDataSource dataSource = new MysqlDataSource();
    private final Connection dbConnection;
-   @Autowired
    private JdbcTemplate template;
    private static final String template = "Hello, %s!";
    private final AtomicLong counter = new AtomicLong();
