@@ -15,7 +15,9 @@ public final class Record {
    
    private final double appraisal;
 
-   public Record(int age, String sex, String civil, int children, int car, String house, String subdivision, String employment, int annum, int assets, int liabilities, double appraisal) {
+   public Record(int age, String sex, String civil, int children, int car, 
+         String house, String subdivision, String employment, 
+         int annum, int assets, int liabilities, double appraisal) {
       this.age         = age;
       this.sex         = sex;
       this.civil       = civil;
