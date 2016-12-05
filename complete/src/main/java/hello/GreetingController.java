@@ -1,6 +1,5 @@
 package hello;
 
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -12,7 +11,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,9 +26,6 @@ public class GreetingController {
             + "sex, civil_status, children, own_car, house, subdivision, "
             + "employment, net_per_annum, assets, liabilities)"
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    //private static final MysqlDataSource dataSource = new MysqlDataSource();
-    @Autowired
-    private JdbcTemplate template;
     private static final String template = "Hello, %s!";
     private final AtomicLong counter = new AtomicLong();
 
@@ -74,8 +69,9 @@ public class GreetingController {
         JSONObject obj = new JSONObject(token);
         double appraisal = obj.getDouble("appraisal");
 
-        /*Add the prospect client to the database
-        try (Connection dbConnection = dataSource.getConnection();
+        /*Add the prospect client to the database*/
+        try (Connection dbConnection = DriverManager
+                .getConnection(HOST, USER, PASSWORD);
                 PreparedStatement preparedStatement
                         = dbConnection.prepareStatement(INSERT)) {
             preparedStatement.setInt(1, age);
@@ -90,8 +86,8 @@ public class GreetingController {
             preparedStatement.setInt(10, assets);
             preparedStatement.setInt(11, liabilities);
             preparedStatement.executeUpdate();
-        }*/
+        }
 
-        return new Record(appraisal);
+        return new Record(age, sex, civil, children, car, house, subdivision, employment, annum, assets, liabilities, appraisal);
     }
 }
