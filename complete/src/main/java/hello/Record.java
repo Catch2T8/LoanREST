@@ -13,11 +13,11 @@ public final class Record {
    private final int    assets;        
    private final int    liabilities;   
    
-   private final double appraisal;
+   private final double predictedAppraisal;
 
    public Record(int age, String sex, String civil, int children, int car, 
          String house, String subdivision, String employment, 
-         int annum, int assets, int liabilities, double appraisal) {
+         int annum, int assets, int liabilities, double predictedAppraisal) {
       this.age         = age;
       this.sex         = sex;
       this.civil       = civil;
@@ -29,7 +29,7 @@ public final class Record {
       this.annum       = annum;
       this.assets      = assets;
       this.liabilities = liabilities;
-      this.appraisal   = appraisal;
+      this.predictedAppraisal   = predictedAppraisal;
    }
 
    public int getAge() {
@@ -76,17 +76,7 @@ public final class Record {
       return liabilities;
    }
 
-   public double getAppraisal() {
-      return appraisal;
+   public double getPredictedAppraisal() {
+      return predictedAppraisal;
    }
-   
-   
 }
-
-//   public Record(double appraisal) {
-//      this.appraisal = appraisal;
-//   }
-//
-//   public double getAppraisal() {
-//      return appraisal;
-//   }
