@@ -1,5 +1,6 @@
 package hello;
 
+import com.mysql.jdbc.Driver;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -18,14 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class GreetingController {
 
-    private static final String HOST = "jdbc:mysql://"
-            + "ap-cdbr-azure-southeast-b.cloudapp.net:3306/creditcard_db";
+    private static final String HOST = "jdbc:mysql://ap-cdbr-azure-southeast-b.cloudapp.net/creditcard_db";
     private static final String USER = "b3c5016a02f8e2";
     private static final String PASSWORD = "ae5686cd";
     private static final String INSERT = "INSERT INTO DATA (age, "
             + "sex, civil_status, children, own_car, house, subdivision, "
-            + "employment, net_per_annum, assets, liabilities)"
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "employment, net_per_annum, assets, liabilities, predicted_appraisal)"
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String template = "Hello, %s!";
     private final AtomicLong counter = new AtomicLong();
 
@@ -48,7 +48,7 @@ public class GreetingController {
             @RequestParam(value = "assets") int assets,
             @RequestParam(value = "liabilities") int liabilities
     )
-            throws JSONException, IOException, SQLException {
+            throws JSONException, IOException, SQLException, ClassNotFoundException {
 
         /*Retrieve suggested appraisal from the machine learning web service*/
         URL mlConnect = new URL(("http://uhac.mybluemix.net/SimpleServlet?"
@@ -70,6 +70,7 @@ public class GreetingController {
         double appraisal = obj.getDouble("appraisal");
 
         /*Add the prospect client to the database*/
+        Class.forName("com.mysql.jdbc.Driver");
         try (Connection dbConnection = DriverManager
                 .getConnection(HOST, USER, PASSWORD);
                 PreparedStatement preparedStatement
@@ -85,6 +86,7 @@ public class GreetingController {
             preparedStatement.setInt(9, annum);
             preparedStatement.setInt(10, assets);
             preparedStatement.setInt(11, liabilities);
+            preparedStatement.setDouble(12, appraisal);
             preparedStatement.executeUpdate();
         }
 
