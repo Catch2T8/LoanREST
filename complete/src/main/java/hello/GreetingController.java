@@ -1,5 +1,6 @@
 package hello;
 
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -13,6 +14,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,9 +22,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class GreetingController {
 
+   private static final String HOST = "jdbc:mysql://"
+           + "ap-cdbr-azure-southeast-b.cloudapp.net:3306/creditcard_db";
+   private static final String USER = "b3c5016a02f8e2";
+   private static final String PASSWORD = "ae5686cd";
+   private static final String INSERT = "INSERT INTO DATA (age, "
+           + "sex, civil_status, children, own_car, house, subdivision, "
+           + "employment, net_per_annum, assets, liabilities)"
+           + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    //private static final MysqlDataSource dataSource = new MysqlDataSource();
+   private final Connection dbConnection;
+   @Autowired
+   private JdbcTemplate template;
    private static final String template = "Hello, %s!";
    private final AtomicLong counter = new AtomicLong();
-   private Connection dbConnection;
 
    public GreetingController() throws SQLException {
       dbConnection = DriverManager.getConnection(
@@ -107,18 +120,18 @@ public class GreetingController {
 
       while (rs.next()) {
          records.add(new Record(
-            rs.getInt(1),
-            rs.getString(2),
-            rs.getString(3),
-            rs.getInt(4),
-            rs.getInt(5),
-            rs.getString(6),
-            rs.getString(7),
-            rs.getString(8),
-            rs.getInt(9),
-            rs.getInt(10),
-            rs.getInt(11),
-            rs.getDouble(12)));
+                 rs.getInt(1),
+                 rs.getString(2),
+                 rs.getString(3),
+                 rs.getInt(4),
+                 rs.getInt(5),
+                 rs.getString(6),
+                 rs.getString(7),
+                 rs.getString(8),
+                 rs.getInt(9),
+                 rs.getInt(10),
+                 rs.getInt(11),
+                 rs.getDouble(12)));
       }
       return records;
    }
