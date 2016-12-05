@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicLong;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,7 +33,7 @@ public class GreetingController {
 		@RequestParam(value="sex") 			String sex,
 		@RequestParam(value="civil") 			String civil,
 		@RequestParam(value="children") 		int children,
-		@RequestParam(value="car") 			String car,
+		@RequestParam(value="car") 			int car,
 		@RequestParam(value="house") 			String house,
 		@RequestParam(value="subdivision") 	String subdivision,
 		@RequestParam(value="employment") 	String employment,
@@ -37,14 +41,14 @@ public class GreetingController {
 		@RequestParam(value="assets") 		int assets,
 		@RequestParam(value="liabilities") 	int liabilities
 		) 
-		throws JSONException, IOException {
+		throws JSONException, IOException, SQLException {
 
 		URL url = new URL(("http://uhac.mybluemix.net/SimpleServlet?"
 			+ "age="  				+ age
 			+ "&sex="  				+ sex
 			+ "&civil="  			+ civil
 			+ "&children="  		+ children
-			+ "&car="  				+ car
+			+ "&car="  			+ (car == 1 ? "yes" : "no")
 			+ "&house="       	+ house
 			+ "&subdivision=" 	+ subdivision
 			+ "&employment="  	+ employment
